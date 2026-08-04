@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const BFF_URL = import.meta.env.VITE_BFF_URL ?? 'http://localhost:8081'
+const PGCC_API_URL = import.meta.env.VITE_PGCC_API_URL ?? 'http://localhost:8082'
 
 interface BackendMessage {
   message: string
@@ -11,7 +11,7 @@ export default function PgccHome() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch(`${BFF_URL}/api/pgcc/message`, { credentials: 'include' })
+    fetch(`${PGCC_API_URL}/api/pgcc/message`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json() as Promise<BackendMessage>
