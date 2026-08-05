@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-const PGCC_API_URL = import.meta.env.VITE_PGCC_API_URL ?? 'http://localhost:8082'
+const PGCC_API_URL = import.meta.env.VITE_PGCC_API_URL ?? ''
 
-interface BackendMessage {
+interface HomePageMessage {
   message: string
 }
 
@@ -11,10 +11,10 @@ export default function PgccHome() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch(`${PGCC_API_URL}/api/pgcc/message`)
+    fetch(`${PGCC_API_URL}/api/pgcc/home`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json() as Promise<BackendMessage>
+        return res.json() as Promise<HomePageMessage>
       })
       .then((data) => setMessage(data.message))
       .catch((err: unknown) => setError(err instanceof Error ? err.message : 'Errore sconosciuto'))
