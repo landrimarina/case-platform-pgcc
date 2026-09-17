@@ -21,10 +21,10 @@ tramite `start-dev.sh` o `restart-service.sh` dalla root del workspace.
 Contiene il client secret del BFF. Non deve mai entrare in git.
 
 ```bash
-export BFF_OIDC_CLIENT_SECRET="<valore dal client pgcc-bff in Keycloak>"
+export BFF_OIDC_CLIENT_SECRET="<valore dal client case-platform-bff in Keycloak>"
 ```
 
-> Dove trovarlo: Keycloak → Realm `case-platform` → Clients → `pgcc-bff` → Credentials → Client Secret
+> Dove trovarlo: Keycloak → Realm `case-platform` → Clients → `case-platform-bff` → Credentials → Client Secret
 
 ---
 
