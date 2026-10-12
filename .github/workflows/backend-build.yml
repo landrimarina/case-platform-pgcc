@@ -38,16 +38,20 @@ jobs:
       - name: Costruisci l'immagine backend PGCC
         uses: redhat-actions/buildah-build@v3
         with:
-          image: case-platform-pgcc-backend:latest
-          tags: ${{ github.sha }}
+          image: case-platform-pgcc-backend
+          tags: |
+            latest
+            ${{ github.sha }}
           containerfiles: ./backend/src/main/docker/Dockerfile.jvm
           context: ./backend
 
       - name: Pubblica l'immagine su GHCR
         uses: redhat-actions/push-to-registry@v3
         with:
-          image: case-platform-pgcc-backend:latest
-          tags: ${{ github.sha }}
+          image: case-platform-pgcc-backend
+          tags: |
+            latest
+            ${{ github.sha }}
           registry: ghcr.io/landrimarina
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
