@@ -1,8 +1,8 @@
-name: Build MFE ANC
+name: Build MFE PGCC
 
 on:
   push:
-    branches:
+    brpgcches:
       - develop
   workflow_dispatch:
 
@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Scarica il codice
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Configura Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
@@ -29,23 +29,27 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Compila MFE ANC
+      - name: Compila MFE pgcc
         working-directory: frontend
         run: npm run build 
 
-      - name: Costruisci l'immagine MFE ANC
+      - name: Costruisci l'immagine MFE pgcc
         uses: redhat-actions/buildah-build@v3
         with:
-          image: case-platform-mfe-anc
-          tags: ${{ github.sha }}
-          containerfiles: ./frontend/Containerfile.mfeanc
+          image: case-platform-mfe-pgcc
+          tags: |
+            latest
+            ${{ github.sha }}
+          containerfiles: ./frontend/Containerfile.mfepgcc
           context: ./frontend
 
       - name: Pubblica l'immagine su GHCR
         uses: redhat-actions/push-to-registry@v3
         with:
           image: case-platform-mfe-pgcc
-          tags: ${{ github.sha }}
+          tags: |
+            latest
+            ${{ github.sha }}
           registry: ghcr.io/landrimarina
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}

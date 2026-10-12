@@ -1,0 +1,9 @@
+# NGINX configurato per funzionare senza privilegi elevati.
+# L'immagine NGINX scelta usa la porta 8080, coerente con nginx.conf.
+
+FROM nginxinc/nginx-unprivileged:stable-alpine
+
+COPY dist/ /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080
