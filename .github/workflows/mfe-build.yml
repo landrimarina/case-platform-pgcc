@@ -36,7 +36,7 @@ jobs:
       - name: Costruisci l'immagine MFE pgcc
         uses: redhat-actions/buildah-build@v3
         with:
-          image: case-platform-mfe-pgcc
+          image: case-platform-pgcc-mfe
           tags: |
             latest
             ${{ github.sha }}
@@ -46,7 +46,7 @@ jobs:
       - name: Pubblica l'immagine su GHCR
         uses: redhat-actions/push-to-registry@v3
         with:
-          image: case-platform-mfe-pgcc
+          image: case-platform-pgcc-mfe
           tags: |
             latest
             ${{ github.sha }}
