@@ -1,0 +1,53 @@
+name: Build Backend PGCC
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+
+      - name: Configura Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Rendi eseguibile mvnw
+        run: chmod +x backend/mvnw
+
+      - name: Build backend ANC
+        working-directory: backend
+        run: ./mvnw -B clean package -DskipTests
+
+      - name: Costruisci l'immagine backend ANC
+        uses: redhat-actions/buildah-build@v3
+        with:
+          image: case-platform-anc
+          tags: ${{ github.sha }}
+          containerfiles: ./backend/src/main/docker/Dockerfile.jvm
+          context: ./backend
+
+      - name: Pubblica l'immagine su GHCR
+        uses: redhat-actions/push-to-registry@v3
+        with:
+          image: case-platform-pgcc-backend
+          tags: ${{ github.sha }}
+          registry: ghcr.io/landrimarina
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}

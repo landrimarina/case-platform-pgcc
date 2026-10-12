@@ -1,0 +1,51 @@
+name: Build MFE ANC
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v7
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Installa le dipendenze
+        working-directory: frontend
+        run: npm ci
+
+      - name: Compila MFE ANC
+        working-directory: frontend
+        run: npm run build 
+
+      - name: Costruisci l'immagine MFE ANC
+        uses: redhat-actions/buildah-build@v3
+        with:
+          image: case-platform-mfe-anc
+          tags: ${{ github.sha }}
+          containerfiles: ./frontend/Containerfile.mfeanc
+          context: ./frontend
+
+      - name: Pubblica l'immagine su GHCR
+        uses: redhat-actions/push-to-registry@v3
+        with:
+          image: case-platform-mfe-pgcc
+          tags: ${{ github.sha }}
+          registry: ghcr.io/landrimarina
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
