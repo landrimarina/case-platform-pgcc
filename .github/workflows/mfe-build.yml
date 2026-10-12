@@ -2,7 +2,7 @@ name: Build MFE PGCC
 
 on:
   push:
-    brpgcches:
+    branches:
       - develop
   workflow_dispatch:
 
