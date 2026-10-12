@@ -31,14 +31,14 @@ jobs:
       - name: Rendi eseguibile mvnw
         run: chmod +x backend/mvnw
 
-      - name: Build backend ANC
+      - name: Build backend PGCC
         working-directory: backend
         run: ./mvnw -B clean package -DskipTests
 
-      - name: Costruisci l'immagine backend ANC
+      - name: Costruisci l'immagine backend PGCC
         uses: redhat-actions/buildah-build@v3
         with:
-          image: case-platform-anc
+          image: case-platform-pgcc-backend:latest
           tags: ${{ github.sha }}
           containerfiles: ./backend/src/main/docker/Dockerfile.jvm
           context: ./backend
@@ -46,7 +46,7 @@ jobs:
       - name: Pubblica l'immagine su GHCR
         uses: redhat-actions/push-to-registry@v3
         with:
-          image: case-platform-pgcc-backend
+          image: case-platform-pgcc-backend:latest
           tags: ${{ github.sha }}
           registry: ghcr.io/landrimarina
           username: ${{ github.actor }}
